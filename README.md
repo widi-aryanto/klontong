@@ -2,8 +2,8 @@
 
 Build using Flutter with BLoC State Management
 
-Initial commit : Nov 22, 2023
-Last commit : Nov 23, 2023
+- Initial commit : Nov 22, 2023
+- Last commit : Nov 23, 2023
 
 ## Package
 
