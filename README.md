@@ -12,6 +12,7 @@ Build using Flutter with BLoC State Management
 - Functional Programming ([dartz](https://pub.dev/packages/dartz))
 - Internationalization & Localization ([intl](https://pub.dev/packages/intl))
 - Form Representation ([formz](https://pub.dev/packages/formz))
+- Shared Preferences ([shared_preferences](https://pub.dev/packages/shared_preferences))
 
 ## Supported Platform
 

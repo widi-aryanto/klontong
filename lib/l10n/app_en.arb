@@ -1,0 +1,17 @@
+{
+  "chooseLanguage": "Choose Preferred Language",
+  "detailProduct": "Detail Product",
+  "category": "Category",
+  "sku": "SKU",
+  "name": "Name",
+  "description": "Description",
+  "weight": "Weight",
+  "width": "Width",
+  "length": "Length",
+  "height": "Height",
+  "image": "Image",
+  "price": "Price",
+  "addData": "Add Data",
+  "saveData": "Save",
+  "search": "Search"
+}
