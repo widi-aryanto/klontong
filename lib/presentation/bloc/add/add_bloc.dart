@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:formz/formz.dart';
 import 'package:klontong/data/model/add/category.dart';
 import 'package:klontong/data/model/add/description.dart';
@@ -15,6 +16,8 @@ import 'package:klontong/data/model/add/weight.dart';
 import 'package:klontong/data/model/add/width.dart';
 import 'package:klontong/data/model/data_model.dart';
 import 'package:klontong/domain/usecase/add.dart';
+import 'package:klontong/utils/navigation/navigation_helper.dart';
+import 'package:klontong/utils/routes/route_helper.dart';
 
 part 'add_event.dart';
 part 'add_state.dart';
@@ -146,7 +149,7 @@ class AddBloc extends Bloc<AddEvent, AddState> {
     final width = Width.dirty(state.width.value);
     final length = Length.dirty(state.length.value);
     final height = Height.dirty(state.height.value);
-    final image = Image.dirty(state.name.value);
+    final image = Image.dirty(state.image.value);
     final price = Price.dirty(state.price.value);
     emit(
       state.copyWith(
@@ -184,7 +187,22 @@ class AddBloc extends Bloc<AddEvent, AddState> {
       );
       result.fold((failure) => emit(state.copyWith(status: FormzSubmissionStatus.failure)), (success) {
         if (success == "success") {
-          emit(state.copyWith(status: FormzSubmissionStatus.success));
+          emit(state.copyWith(
+            category: const Category.dirty(''),
+            sku: const SKU.dirty(''),
+            name: const Name.dirty(''),
+            description: const Description.dirty(''),
+            weight: const Weight.dirty(null),
+            width: const Width.dirty(null),
+            length: const Length.dirty(null),
+            height: const Height.dirty(null),
+            image: const Image.dirty(''),
+            price: const Price.dirty(null),
+            status: FormzSubmissionStatus.success,
+          ));
+          NavigationHelper.navigateAndRemoveUntil(
+              homeRoute, (m.Route<dynamic> route) => false
+          );
         } else {
           emit(state.copyWith(status: FormzSubmissionStatus.failure));
         }

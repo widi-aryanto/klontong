@@ -2,6 +2,9 @@
 
 Build using Flutter with BLoC State Management
 
+Initial commit : Nov 22, 2023
+Last commit : Nov 23, 2023
+
 ## Package
 
 - State Management ([flutter_bloc](https://pub.dev/packages/flutter_bloc))
@@ -13,6 +16,7 @@ Build using Flutter with BLoC State Management
 - Internationalization & Localization ([intl](https://pub.dev/packages/intl))
 - Form Representation ([formz](https://pub.dev/packages/formz))
 - Shared Preferences ([shared_preferences](https://pub.dev/packages/shared_preferences))
+- Image Picker ([image_picker](https://pub.dev/packages/image_picker))
 
 ## Supported Platform
 

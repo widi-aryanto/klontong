@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
+  final TextEditingController? controller;
   final String? initial;
   final String? label;
   final String? helper;
@@ -11,13 +12,14 @@ class TextFieldWidget extends StatelessWidget {
   final bool? secureText;
   final int? maxLines;
   final Function? onChanged;
-  const TextFieldWidget({super.key, this.initial, this.label, this.helper,
-    this.onChanged, this.inputType, this.prefixIcon, this.suffixIcon,
-    this.secureText, this.inputAction, this.maxLines});
+  const TextFieldWidget({super.key, this.controller, this.initial, this.label,
+    this.helper, this.onChanged, this.inputType, this.prefixIcon,
+    this.suffixIcon, this.secureText, this.inputAction, this.maxLines});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       initialValue: initial,
       decoration: InputDecoration(
         border: const OutlineInputBorder(

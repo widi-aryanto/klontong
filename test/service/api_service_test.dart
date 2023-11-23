@@ -51,7 +51,7 @@ void main() {
   });
 
   group("API searchData()", () {
-    test("should return list of data when the response code is 200", () async {
+    test("should return search list of data when the response code is 200", () async {
       // arrange
       when(mockHttpClient.get(
         Uri.parse("https://my-json-server.typicode.com/widi-aryanto/klontong/search"),

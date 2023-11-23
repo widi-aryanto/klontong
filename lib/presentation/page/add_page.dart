@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:formz/formz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:klontong/presentation/bloc/add/add_bloc.dart';
 import 'package:klontong/utils/navigation/navigation_helper.dart';
 import 'package:klontong/utils/routes/route_helper.dart';
@@ -16,6 +19,9 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddState extends State<AddPage> {
+  final List<String> list = <String>['Category', 'Cemilan', 'Minuman', 'Pembersih', 'Alat Rumah Tangga'];
+  final picker = ImagePicker();
+  late Future<XFile?> pickedFile = Future.value(null);
 
   @override
   Widget build(BuildContext context) {
@@ -39,27 +45,49 @@ class _AddState extends State<AddPage> {
                     Row(
                       children: [
                         InkWell(
-                          onTap: () {
-                            context.read<AddBloc>().add(const ImageChanged(image: 'value'));
+                          onTap: () async {
+                            pickedFile = picker.pickImage(source: ImageSource.gallery).whenComplete(() => setState(() {}));
                           },
-                          child: const Icon(
-                            Icons.image,
-                            size: 150,
+                          child: FutureBuilder<XFile?>(
+                            future: pickedFile,
+                            builder: (context, snap) {
+                              if (snap.hasData) {
+                                context.read<AddBloc>().add(ImageChanged(image: snap.data!.path));
+                                return SizedBox(
+                                  width: 150,
+                                  height: 150,
+                                  child: Image.file(
+                                    File(snap.data!.path),
+                                    fit: BoxFit.contain,
+                                  ),
+                                );
+                              }
+                              return const Icon(
+                                Icons.image,
+                                size: 150,
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(width: 16),
                         Flexible(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextFieldWidget(
-                                initial: state.category.value,
-                                label: res.category,
-                                inputType: TextInputType.text,
-                                inputAction: TextInputAction.next,
-                                secureText: false,
-                                onChanged: (value) {
-                                  context.read<AddBloc>().add(CategoryChanged(category: value));
+                              DropdownMenu<String>(
+                                initialSelection: list.first,
+                                onSelected: (String? value) {
+                                  setState(() {
+                                    context.read<AddBloc>().add(CategoryChanged(category: value.toString()));
+                                  });
                                 },
+                                textStyle: const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
+                                  return DropdownMenuEntry<String>(value: value, label: value);
+                                }).toList(),
                               ),
                               const SizedBox(height: 16),
                               TextFieldWidget(
@@ -67,7 +95,6 @@ class _AddState extends State<AddPage> {
                                 label: res.sku,
                                 inputType: TextInputType.text,
                                 inputAction: TextInputAction.next,
-                                suffixIcon: null,
                                 secureText: false,
                                 onChanged: (value) {
                                   context.read<AddBloc>().add(SKUChanged(sku: value));
@@ -84,7 +111,6 @@ class _AddState extends State<AddPage> {
                       label: res.name,
                       inputType: TextInputType.text,
                       inputAction: TextInputAction.next,
-                      suffixIcon: null,
                       secureText: false,
                       onChanged: (value) {
                         context.read<AddBloc>().add(NameChanged(name: value));
@@ -96,7 +122,6 @@ class _AddState extends State<AddPage> {
                       label: res.description,
                       inputType: TextInputType.text,
                       inputAction: TextInputAction.next,
-                      suffixIcon: null,
                       secureText: false,
                       maxLines: 5,
                       onChanged: (value) {
@@ -112,7 +137,6 @@ class _AddState extends State<AddPage> {
                             label: res.weight,
                             inputType: TextInputType.number,
                             inputAction: TextInputAction.next,
-                            suffixIcon: null,
                             secureText: false,
                             onChanged: (value) {
                               context.read<AddBloc>().add(WeightChanged(weight: value));
@@ -126,7 +150,6 @@ class _AddState extends State<AddPage> {
                             label: res.width,
                             inputType: TextInputType.number,
                             inputAction: TextInputAction.next,
-                            suffixIcon: null,
                             secureText: false,
                             onChanged: (value) {
                               context.read<AddBloc>().add(WidthChanged(width: value));
@@ -144,7 +167,6 @@ class _AddState extends State<AddPage> {
                             label: res.length,
                             inputType: TextInputType.number,
                             inputAction: TextInputAction.next,
-                            suffixIcon: null,
                             secureText: false,
                             onChanged: (value) {
                               context.read<AddBloc>().add(LengthChanged(length: value));
@@ -158,7 +180,6 @@ class _AddState extends State<AddPage> {
                             label: res.height,
                             inputType: TextInputType.number,
                             inputAction: TextInputAction.next,
-                            suffixIcon: null,
                             secureText: false,
                             onChanged: (value) {
                               context.read<AddBloc>().add(HeightChanged(height: value));
@@ -173,7 +194,6 @@ class _AddState extends State<AddPage> {
                       label: res.price,
                       inputType: TextInputType.number,
                       inputAction: TextInputAction.done,
-                      suffixIcon: null,
                       secureText: false,
                       onChanged: (value) {
                         context.read<AddBloc>().add(PriceChanged(price: value));
@@ -186,11 +206,8 @@ class _AddState extends State<AddPage> {
                         title: res.saveData,
                         width: double.infinity,
                         onClick: () {
-                          isValid ? context.read<AddBloc>().add(FormSubmitted()) : null;
-                          if (state.status.isSuccess) {
-                            NavigationHelper.navigateAndRemoveUntil(
-                                homeRoute, (Route<dynamic> route) => false
-                            );
+                          if (isValid) {
+                            context.read<AddBloc>().add(FormSubmitted());
                           }
                         },
                       ),
